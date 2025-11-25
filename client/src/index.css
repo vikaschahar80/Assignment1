@@ -43,7 +43,7 @@
   --chart-3: 280 65% 38%;
   --chart-4: 25 95% 40%;
   --chart-5: 340 82% 38%;
-  --font-sans: Open Sans, sans-serif;
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: .5rem;
@@ -172,6 +172,30 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  /* ProseMirror Editor Styles */
+  .prose-editor-content {
+    @apply text-foreground text-base leading-relaxed;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 450px;
+    outline: none;
+  }
+
+  .prose-editor-content p {
+    @apply mb-4;
+  }
+
+  .prose-editor-content p:last-child {
+    @apply mb-0;
+  }
+
+  .prose-editor-content:empty::before {
+    content: "Start writing or paste your text here...";
+    @apply text-muted-foreground;
+    pointer-events: none;
+    position: absolute;
   }
 }
 
