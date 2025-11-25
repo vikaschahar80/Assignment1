@@ -1,0 +1,28 @@
+🎯 Assignment Explanation: AI-Assisted Editor
+The core goal is to build a high-quality, professional user interface for text editing that incorporates a modern, asynchronous feature: AI text generation.
+
+I. Functional Requirements (What it must do)
+
+Requirement	Explanation
+1. UI with Editor and Button	Requires a clean layout containing two main elements: the Prosemirror View (the editor box) and the "Continue Writing" action button.
+2. User Input	Confirms the editor must be fully functional for typing, editing, and content manipulation.
+3. AI "Continue Writing"	This is the core feature. It requires extracting the current editor content (the prompt), simulating an asynchronous request (the AI call), and then seamlessly appending the generated response back into the editor document. The insertion must feel smooth and instantaneous to the user.
+II. Technical Requirements (How it must be built)
+
+These requirements are the most critical, as they dictate the architecture and demonstrate library proficiency.
+
+Technology	Significance & Expected Skill Demonstration
+1. TypeScript	Mandatory for ensuring code quality, type safety, and maintainability. You must use interfaces and types correctly, especially when defining XState context and Prosemirror document structure.
+2. React	Used for the component architecture. Evaluates your knowledge of hooks, component lifecycle, and integrating non-React libraries (Prosemirror) efficiently.
+3. XState	This is key. You must model the editor's lifecycle as a robust Finite State Machine. This shows you can handle complex, asynchronous flows (like the AI call) with defined states (idle, loadingAI, error) and events, preventing race conditions and unexpected bugs.
+4. Prosemirror	This goes beyond a simple <textarea>. It evaluates your ability to work with rich document models. You must demonstrate correct handling of: Schema definition, managing the EditorState, and using Transactions to programmatically insert the AI-generated text without disrupting the user's current view.
+III. Evaluation Criteria (How you will be judged)
+
+The evaluation is holistic, focusing on your engineering maturity, not just meeting the basic checks.
+
+Criterion	Focus of Evaluation
+1. Making Sense of Broad Requirements	How did you define the boundaries? Did you make the AI output contextual? Did you add necessary UX elements like a spinner or keyboard shortcuts? (This shows initiative and product sense).
+2. Meeting Requirements	A pass/fail check. Crucially, submissions failing to use XState or Prosemirror correctly will likely be rejected.
+3. Understanding Patterns	* React: Correct use of custom hooks, separation of concerns. * XState: Clean state/context/service definitions, robust error handling. * Prosemirror: Correct use of EditorView, EditorState, and Transaction (not simply setting an HTML string).
+4. Understanding of the Codebase	You must be able to articulate why you chose XState transitions or how a Prosemirror transaction works. (This validates that you didn't just copy/paste code).
+5. Design and Aesthetics	The final application must look professional, clean, and modern. Focus on clear typography, accessible colors, and effective use of spacing. The loading and error states must be visually obvious.
