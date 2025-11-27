@@ -74,6 +74,16 @@ npm run dev
 ```
 
 **Windows (PowerShell)**
+```cross-env
+npm install cross-env --save-dev
+```
+You need to change the package.json to
+```Change to
+"scripts": {
+  "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts"
+}
+```
+
 ```powershell
 npm run dev
 ```
