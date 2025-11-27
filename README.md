@@ -98,6 +98,7 @@ Navigate to `http://localhost:5001` (or the port shown in the terminal).
 - **Keyboard Shortcuts:** `Cmd/Ctrl + Enter` or `Cmd/Ctrl + Shift + Enter` to trigger AI continuation.
 - **Saved Sessions:** The right sidebar stores drafts locally. Click a card to load, or delete via the corner button.
 - **Clear Editor:** Use the “Clear” button when you need a fresh slate.
+- **Formating:** We can format our text like bold, underline, and size change, etc.
 
 ---
 
@@ -108,20 +109,5 @@ Navigate to `http://localhost:5001` (or the port shown in the terminal).
 - **Editor:** ProseMirror
 - **AI Integrations:** Google Gemini (`@google/genai`), OpenAI (`openai`), Mistral (REST API)
 
----
 
-## 🤝 Contributing
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/amazing`)
-3. Commit & push
-4. Open a Pull Request
-
----
-
-## 📄 License
-
-MIT © Vikash Chahar
-
-Enjoy writing with SmartEditor! ✍️
 
