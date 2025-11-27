@@ -88,7 +88,7 @@ You need to change the package.json to
 npm run dev
 ```
 
-Navigate to `http://localhost:5173` (or the port shown in the terminal).
+Navigate to `http://localhost:5001` (or the port shown in the terminal).
 
 ---
 
