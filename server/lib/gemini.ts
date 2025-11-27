@@ -19,7 +19,7 @@ export async function continueWriting(text: string, provider: AIProvider = "gemi
       throw new Error("Cannot generate continuation for empty text");
     }
 
-    const prompt = `Continue the following text with 2-3 sentences that match the tone and style:
+    const prompt = `Continue the following text with 4-5 sentences that match the tone and style:
 
 ${text}`;
 
