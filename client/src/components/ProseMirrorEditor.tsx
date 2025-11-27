@@ -4,22 +4,28 @@ import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
 import { schema as basicSchema } from "prosemirror-schema-basic";
 import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
+import { baseKeymap, toggleMark } from "prosemirror-commands";
 
 interface ProseMirrorEditorProps {
   onContentChange?: (content: string) => void;
   onContinueWriting?: () => void;
   className?: string;
+  fontSize?: "sm" | "md" | "lg";
 }
 
 export interface ProseMirrorEditorHandle {
   insertText: (text: string) => void;
   getContent: () => string;
+  setContent: (text: string) => void;
+  toggleBold: () => void;
+  toggleItalic: () => void;
+  toggleUnderline: () => void;
+  clear: () => void;
   focus: () => void;
 }
 
 const ProseMirrorEditor = forwardRef<ProseMirrorEditorHandle, ProseMirrorEditorProps>(
-  ({ onContentChange, onContinueWriting, className }, ref) => {
+  ({ onContentChange, onContinueWriting, className, fontSize = "md" }, ref) => {
     const editorRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const onContentChangeRef = useRef(onContentChange);
@@ -60,6 +66,52 @@ const ProseMirrorEditor = forwardRef<ProseMirrorEditorHandle, ProseMirrorEditorP
         const doc = viewRef.current.state.doc;
         return doc.textContent;
       },
+      setContent: (text: string) => {
+        if (!viewRef.current) return;
+        const view = viewRef.current;
+        const { state } = view;
+        let tr = state.tr;
+        tr = tr.delete(0, state.doc.content.size);
+        if (text) {
+          tr = tr.insertText(text, 0);
+        }
+        view.dispatch(tr);
+      },
+      toggleBold: () => {
+        if (!viewRef.current) return;
+        const view = viewRef.current;
+        const { state } = view;
+        const markType = state.schema.marks.strong;
+        if (!markType) return;
+        toggleMark(markType)(state, view.dispatch);
+        view.focus();
+      },
+      toggleItalic: () => {
+        if (!viewRef.current) return;
+        const view = viewRef.current;
+        const { state } = view;
+        const markType = state.schema.marks.em;
+        if (!markType) return;
+        toggleMark(markType)(state, view.dispatch);
+        view.focus();
+      },
+      toggleUnderline: () => {
+        if (!viewRef.current) return;
+        const view = viewRef.current;
+        const { state } = view;
+        const markType = (state.schema.marks as any).underline;
+        if (!markType) return;
+        toggleMark(markType)(state, view.dispatch);
+        view.focus();
+      },
+      clear: () => {
+        if (!viewRef.current) return;
+        const view = viewRef.current;
+        const { state } = view;
+        let tr = state.tr;
+        tr = tr.delete(0, state.doc.content.size);
+        view.dispatch(tr);
+      },
       focus: () => {
         viewRef.current?.focus();
       },
@@ -68,16 +120,35 @@ const ProseMirrorEditor = forwardRef<ProseMirrorEditorHandle, ProseMirrorEditorP
     useEffect(() => {
       if (!editorRef.current) return;
 
-      // Define custom schema based on basic schema
+      // Define custom schema based on basic schema and add underline support
+      const underlineMark = {
+        parseDOM: [
+          { tag: "u" },
+          { style: "text-decoration", getAttrs: (value: string) => value === "underline" && null },
+        ],
+        toDOM() {
+          return ["span", { style: "text-decoration: underline" }, 0];
+        },
+      };
+
+      const marks =
+        (basicSchema.spec.marks as any).addToEnd !== undefined
+          ? (basicSchema.spec.marks as any).addToEnd("underline", underlineMark)
+          : basicSchema.spec.marks;
+
       const customSchema = new Schema({
         nodes: basicSchema.spec.nodes,
-        marks: basicSchema.spec.marks,
+        marks,
       });
 
       // Create separate keymaps to avoid override issues
       // Custom keymap should come first to take precedence
       const customKeymap = keymap({
         "Mod-Enter": () => {
+          onContinueWritingRef.current?.();
+          return true;
+        },
+        "Mod-Shift-Enter": () => {
           onContinueWritingRef.current?.();
           return true;
         },
@@ -125,6 +196,25 @@ const ProseMirrorEditor = forwardRef<ProseMirrorEditorHandle, ProseMirrorEditorP
         view.destroy();
       };
     }, []);
+
+    // Update font size when it changes
+    useEffect(() => {
+      if (!viewRef.current) return;
+      const editorDom = viewRef.current.dom;
+      if (!editorDom) return;
+
+      // Remove existing font size classes
+      editorDom.classList.remove("text-sm", "text-base", "text-lg");
+      
+      // Add new font size class
+      if (fontSize === "sm") {
+        editorDom.classList.add("text-sm");
+      } else if (fontSize === "lg") {
+        editorDom.classList.add("text-lg");
+      } else {
+        editorDom.classList.add("text-base");
+      }
+    }, [fontSize]);
 
     return (
       <div

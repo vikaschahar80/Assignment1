@@ -3,6 +3,7 @@ import { z } from "zod";
 // AI Text Generation Types
 export const continueWritingRequestSchema = z.object({
   text: z.string().min(1, "Text content is required"),
+  provider: z.enum(["gemini", "openai", "mistral"]).optional().default("gemini"),
 });
 
 export const continueWritingResponseSchema = z.object({
@@ -26,12 +27,17 @@ export interface ProseMirrorDocument {
   content: EditorDocumentNode[];
 }
 
+// AI Provider Types
+export type AIProvider = "gemini" | "openai" | "mistral";
+
 // XState Context Types
 export interface EditorContext {
   editorContent: string;
   aiGeneratedText: string;
   error: string | null;
   lastRequestTime: number | null;
+  savedDocuments: string[];
+  aiProvider: AIProvider;
 }
 
 export type EditorEvent =
@@ -39,4 +45,8 @@ export type EditorEvent =
   | { type: "AI_SUCCESS"; data: string }
   | { type: "AI_ERROR"; error: string }
   | { type: "CLEAR_ERROR" }
-  | { type: "UPDATE_CONTENT"; content: string };
+  | { type: "UPDATE_CONTENT"; content: string }
+  | { type: "SAVE_DOCUMENT"; content: string }
+  | { type: "HYDRATE_SAVED"; documents: string[] }
+  | { type: "DELETE_DOCUMENT"; index: number }
+  | { type: "SWITCH_AI_PROVIDER"; provider: AIProvider };

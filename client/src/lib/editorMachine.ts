@@ -13,12 +13,39 @@ export const editorMachine = createMachine({
     aiGeneratedText: "",
     error: null,
     lastRequestTime: null,
+    savedDocuments: [],
+    aiProvider: "gemini" as const,
   },
   // Global event handlers - handle UPDATE_CONTENT in all states
   on: {
     UPDATE_CONTENT: {
       actions: assign({
         editorContent: ({ event }) => event.content,
+      }),
+    },
+    SAVE_DOCUMENT: {
+      actions: assign({
+        savedDocuments: ({ context, event }) =>
+          event.content.trim().length
+            ? [...context.savedDocuments, event.content]
+            : context.savedDocuments,
+        editorContent: () => "",
+      }),
+    },
+    HYDRATE_SAVED: {
+      actions: assign({
+        savedDocuments: ({ event }) => event.documents ?? [],
+      }),
+    },
+    SWITCH_AI_PROVIDER: {
+      actions: assign({
+        aiProvider: ({ event }) => event.provider,
+      }),
+    },
+    DELETE_DOCUMENT: {
+      actions: assign({
+        savedDocuments: ({ context, event }) =>
+          context.savedDocuments.filter((_, idx) => idx !== event.index),
       }),
     },
   },

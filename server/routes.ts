@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { continueWriting } from "./lib/gemini";
-import { continueWritingRequestSchema, type ContinueWritingResponse } from "@shared/schema";
+import { continueWritingRequestSchema, type ContinueWritingResponse, type AIProvider } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // AI Text Continuation Endpoint
@@ -17,10 +17,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const { text } = validation.data;
+      const { text, provider } = validation.data;
 
       // Generate AI continuation
-      const continuation = await continueWriting(text);
+      const continuation = await continueWriting(text, provider);
 
       const response: ContinueWritingResponse = {
         continuation,

@@ -7,11 +7,16 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export async function apiRequest(
+type ApiRequestOptions = {
+  parseJson?: boolean;
+};
+
+export async function apiRequest<TResponse = Response>(
   method: string,
   url: string,
   data?: unknown | undefined,
-): Promise<Response> {
+  options?: ApiRequestOptions,
+): Promise<TResponse> {
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
@@ -20,7 +25,12 @@ export async function apiRequest(
   });
 
   await throwIfResNotOk(res);
-  return res;
+
+  if (options?.parseJson) {
+    return (await res.json()) as TResponse;
+  }
+
+  return res as TResponse;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";

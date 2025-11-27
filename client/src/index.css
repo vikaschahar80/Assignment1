@@ -176,12 +176,9 @@
 
   /* ProseMirror Editor Styles */
   .prose-editor-content {
-    @apply text-foreground text-base leading-relaxed;
-    font-size: 16px;
-    line-height: 1.6;
-    min-height: 450px;
-    outline: none;
-  }
+  @apply text-foreground text-base leading-relaxed;
+  outline: none;
+}
 
   .prose-editor-content p {
     @apply mb-4;
